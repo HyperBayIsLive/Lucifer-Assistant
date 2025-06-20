@@ -1,52 +1,37 @@
-# 🧐 Lucifer - Your Custom Voice Assistant for Windows 10
+# 🔊 Lucifer - A Custom Voice Assistant for Windows 10
 
-**Lucifer** is a feature-rich, fully offline voice assistant designed for Windows 10 systems. It integrates deep system automation, real-time voice command processing, and custom HTML-based utilities—especially a **custom clock/timer/alarm interface**, overcoming the limitations of Windows' built-in clock automation.
+**Lucifer** is a powerful, offline voice assistant built specifically for Windows 10. It brings deep system-level automation, real-time voice command processing, and a fully customizable HTML-based clock utility—solving limitations of the native Windows clock.
 
-> ⚠️ **Note:** This is a **prototype build** intended for experimentation and personal use. Bugs and inconsistencies may exist.
-
----
-
-### 🚀 Features
-
-* 🎧 Voice-controlled with wake words: “Hey Lucifer”, “Hello Lucy”, etc.
-* 🔐 System Controls:
-
-  * Lock, sleep, restart, and shutdown with voice confirmation.
-* 🔊 Audio Management:
-
-  * Set specific volume, increase/decrease/mute.
-* 💧 Battery Status Alerts:
-
-  * Voice alerts for low battery (below 30%).
-* ⏰ Advanced Time Features:
-
-  * Real-time clock reading, date/day queries.
-  * Set **alarms/timers** using natural language.
-* 🗺️ Custom Clock App (HTML):
-
-  * Bypasses system limitations for reliable timer/alarm display.
-* 📂 App Launcher:
-
-  * Open installed applications via voice (with fallback support).
-* ♻️ Persistent Session Handling:
-
-  * Kills older instances if new one is launched.
-* 📆 Auto-Start on Boot (Registry Integration).
-* 🎚️ Built-in COM handling for audio device control.
-* ⛔️ Hotkey Exit Support (`Ctrl + Alt + Q`).
+> ⚠️ **Note:** This is a **prototype build** created for personal and experimental use. Some bugs or inconsistencies may occur.
 
 ---
 
-### 🛠️ Setup Instructions
+## 🚀 Features
 
-1. **Dependencies** (Install via `pip`):
+* 🎧 **Voice Activation:** Wake words include “Hey Lucifer”, “Hello Lucy”, etc.
+* 🔐 **System Control:** Lock, sleep, restart, and shutdown via voice with confirmation.
+* 🔊 **Volume Management:** Mute, set, or adjust volume precisely.
+* 🔋 **Battery Monitoring:** Alerts when battery is below 30%.
+* ⏰ **Timers & Alarms:** Natural language support for setting time-based reminders.
+* 🌐 **Custom Clock App:** Built-in HTML interface bypasses Windows clock automation restrictions.
+* 📂 **Application Launcher:** Launch any app by name, even with fallback prompts.
+* ♻️ **Smart Session Handling:** Detects and terminates older running instances.
+* 🖥️ **Auto-Start Capability:** Adds itself to system startup using the registry.
+* ⚙️ **Audio via COM:** Uses low-level COM interfaces for precise volume control.
+* ⌨️ **Global Hotkey Exit:** Press `Ctrl + Alt + Q` to exit immediately.
+
+---
+
+## 🛠️ Setup Instructions
+
+1. **Install Dependencies**:
 
    ```bash
    pip install pyttsx3 speechrecognition pyaudio psutil keyboard comtypes python-dateutil
    ```
-2. Ensure your microphone is functional and Brave browser is installed (or fallback to default browser).
-3. Place your `CLOCK APP.html` and optional `WAKEBEEP.m4a` in the same directory.
-4. Run the script:
+2. Ensure a working microphone and Brave browser (recommended) are installed.
+3. Place `CLOCK APP.html` and optionally `WAKEBEEP.m4a` in the same directory.
+4. Run the assistant:
 
    ```bash
    python lucifer.py
@@ -54,49 +39,54 @@
 
 ---
 
-### 💡 Usage Tips
+## 💡 Usage Tips
 
-* Wake it up: say “Hey Lucifer” or “Hello Lucy”.
-* Ask: “What’s the time?”, “Set timer for 15 minutes”, “Open Notepad”, “Shutdown computer”...
-* Confirm actions by saying “Activate” when prompted.
+* Start by saying: “Hey Lucifer” or “Hello Lucy”
+* Example queries:
+
+  * “What’s the time?”
+  * “Set timer for 20 minutes”
+  * “Open Notepad”
+  * “Shutdown computer”
+* Say **“Activate”** to confirm critical actions like shutdown or restart.
 
 ---
 
-### 📁 File Structure
+## 📁 File Structure
 
 ```
 Lucifer/
 ├── lucifer.py                # Main assistant script
 ├── CLOCK APP.html            # Custom clock/timer/alarm UI
-├── WAKEBEEP.m4a              # Optional wake beep
+├── WAKEBEEP.m4a              # Optional wake beep sound
 └── voice_assistant.log       # Log file (auto-generated)
 ```
 
 ---
 
-### ⚠️ Known Issues & Bugs
+## 🐞 Known Issues & Bugs
 
-* ⚠️ Assistant may misinterpret wake words in noisy environments.
-* ⚠️ Some apps may fail to launch if not registered in Windows StartApps.
-* ⚠️ Clock app must remain open for timers/alarms to function properly.
-* ⚠️ Audio device locking issues may occur with some drivers.
+* 🔄 Wake word detection may be affected by background noise.
+* ❌ Some applications may not open if unlisted in Windows StartApps.
+* 🕒 Timers and alarms require the clock app window to remain open.
+* 🎙️ On some systems, audio device locking may produce glitches.
 
-Please feel free to open issues if you encounter bugs or suggest improvements.
-
----
-
-### 📄 License
-
-This project is licensed under the **MIT License**. See `LICENSE` file for details.
+> Encounter an issue or have ideas to improve it? [Open an issue](https://github.com/your-repo/issues).
 
 ---
 
-### 🙋‍♂️ Author
+## 📄 License
+
+This project is licensed under the **MIT License**. See the `LICENSE` file for full details.
+
+---
+
+## 👨‍💻 Author
 
 Created by [Tarun Bali](https://www.linkedin.com/in/tarun-bali/)
 
 ---
 
-### ⭐️ Give It a Star!
+## ⭐️ Support the Project
 
-If you find this helpful, consider ⭐️ starring the repo to support future development!
+If you find **Lucifer** useful or interesting, consider giving it a ⭐️ to help it reach more developers!
