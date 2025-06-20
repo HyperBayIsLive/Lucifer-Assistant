@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analog Digital Clock</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=BenchNine:300,400");
+    *, *:after, *:before {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: #222;
+      overflow: hidden;
+      font-family: 'BenchNine', sans-serif;
+    }
+
+    .clock-container {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 0 25px 3px #000, 0 0 10px rgba(0, 0, 0, 0.8) inset;
+    }
+    .clock-container .spear {
+      position: absolute;
+      width: 220px;
+      height: 1px;
+      background: red;
+      left: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 200;
+      box-shadow: 0 3px 3px rgba(0, 0, 0, 0.4);
+    }
+    .clock-container .spear:after {
+      content: '';
+      position: absolute;
+      border: 7px solid transparent;
+      border-right-color: red;
+      right: 0;
+      top: -7px;
+    }
+    .clock-container .spear:before {
+      content: '';
+      position: absolute;
+      border: 7px solid transparent;
+      border-left-color: red;
+      left: 2px;
+      top: -7px;
+    }
+    .clock-container .clock-analog {
+      width: 440px;
+      height: 440px;
+      border-radius: 50%;
+      margin: 20px;
+      background: #fff;
+      z-index: 5;
+      position: relative;
+      box-shadow: 0 0 25px 3px #000 inset;
+    }
+    .clock-container .clock-analog .second, .clock-container .clock-analog .minute, .clock-container .clock-analog .hour {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      z-index: 100;
+      transition: 0.2s 0.2s ease-in;
+      transform: rotate(90deg);
+    }
+    .clock-container .clock-analog .second span, .clock-container .clock-analog .minute span, .clock-container .clock-analog .hour span {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      transform-origin: 50%;
+      z-index: 5;
+    }
+    .clock-container .clock-analog .second span:after, .clock-container .clock-analog .minute span:after, .clock-container .clock-analog .hour span:after {
+      content: '';
+      width: 4px;
+      height: 1px;
+      background: #000;
+      position: absolute;
+      left: 130%;
+      top: -10%;
+      opacity: 0.3;
+    }
+    .clock-container .clock-analog .second span:nth-child(5n + 2):after, .clock-container .clock-analog .minute span:nth-child(5n + 2):after, .clock-container .clock-analog .hour span:nth-child(5n + 2):after {
+      width: 7px;
+      opacity: 1;
+      left: 110%;
+    }
+    .clock-container .clock-analog .hour {
+      z-index: 150;
+      font-size: 32px;
+      font-weight: 400;
+    }
+    .clock-container .clock-analog .hour span:after {
+      opacity: 1;
+      width: 4px;
+      height: 1px;
+      color: #666;
+      transform: translate(5px, 12px);
+    }
+    .clock-container .clock-analog .hour:after {
+      content: '';
+      background: #fff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.6) inset;
+    }
+    .clock-container .clock-analog .minute {
+      color: #fff;
+      font-size: 16px;
+    }
+    .clock-container .clock-analog .minute span:after {
+      background: #fff;
+      transform: translate(10px, -7px) rotate(-9deg);
+    }
+    .clock-container .clock-analog .minute:after {
+      content: '';
+      background: #333;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px 2px #000 inset;
+    }
+    .clock-container .clock-analog .second {
+      font-size: 12px;
+    }
+    .clock-container .clock-analog .second span:after {
+      transform: translate(5px, -10px);
+    }
+    .clock-container .clock-analog .dail {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      z-index: 100;
+    }
+    .clock-container .clock-analog .dail span {
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      transform-origin: 50%;
+      text-indent: 1000px;
+      overflow: hidden;
+      position: absolute;
+    }
+    .clock-container .clock-analog .dail span:after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: #7d7e7d;
+      zoom: 1;
+      filter: progid:DXImageTransform.Microsoft.gradient(gradientType=1, startColorstr='#FF7D7E7D', endColorstr='#FF0E0E0E');
+      background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuMCIgeTE9IjAuNSIgeDI9IjEuMCIgeTI9IjAuNSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzdkN2U3ZCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzBlMGUwZSIvPjwvbGluZWFyR3JhZGlhbWVudD4vPGRlZnM+PC9zdmc+IA==');
+      background-size: 100%;
+      background-image: linear-gradient(to right, #7d7e7d 0%, #0e0e0e 100%);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .clock-container .clock-analog .dail span:nth-child(5n + 1):after {
+      width: 8px;
+    }
+    .clock-container .clock-digital {
+      position: absolute;
+      z-index: 200;
+      height: 444px;
+      width: 224px;
+      background: #090909;
+      left: 18px;
+      top: 18px;
+      border-radius: 220px 0 0 220px;
+      box-shadow: 5px 0 15px #000;
+    }
+    .clock-container .clock-digital:after {
+      content: '';
+      position: absolute;
+      border: 15px solid #8e0a0a;
+      border-right: none;
+      height: 400px;
+      width: 200px;
+      border-radius: 220px 0 0 220px;
+      left: 25px;
+      top: 25px;
+    }
+    .clock-container .clock-digital .time {
+      background: #111;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      border-radius: 50px;
+      font-size: 24px;
+      padding: 2px 20px;
+      box-shadow: 0 0 15px #000 inset;
+    }
+    .clock-container .clock-digital .day {
+      background: #111;
+      position: absolute;
+      right: 20px;
+      bottom: 100px;
+      color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 15px #000 inset;
+      padding: 2px 20px;
+      font-size: 16px;
+    }
+    .clock-container .clock-digital .date {
+      background: #111;
+      position: absolute;
+      right: 20px;
+      top: 100px;
+      color: #fff;
+      border-radius: 20px;
+      font-size: 16px;
+      box-shadow: 0 0 10px #000 inset;
+      padding: 2px 20px;
+    }
+    /* New style for the target time display in digital clock */
+    .clock-container .clock-digital .target {
+      background: #111;
+      position: absolute;
+      right: 20px;
+      top: calc(50% + 40px);
+      transform: translateY(-50%);
+      color: #fff;
+      border-radius: 20px;
+      font-size: 16px;
+      padding: 2px 20px;
+      box-shadow: 0 0 10px #000 inset;
+    }
+    /* Modal styling for setup form */
+    #setupModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+    }
+    #setupModal form {
+      background: #333;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    #setupModal input[type="text"] {
+      font-size: 16px;
+      padding: 5px;
+      margin-bottom: 10px;
+      width: 220px;
+    }
+    #setupModal label {
+      margin-right: 10px;
+    }
+    #setupModal input[type="radio"] {
+      margin-right: 5px;
+    }
+    #setupModal button {
+      font-size: 16px;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Setup Modal for Alarm/Timer -->
+  <div id="setupModal">
+    <form id="setupForm">
+      <div>
+        <label>Set Time (HH:MM:SS AM/PM):</label><br>
+        <input type="text" id="targetInput" placeholder="00:00:00 AM/PM" required>
+      </div>
+      <div>
+        <label>Select Mode:</label><br>
+        <!-- Using radio buttons for single selection -->
+        <input type="radio" name="mode" value="timer" required> Timer&nbsp;&nbsp;
+        <input type="radio" name="mode" value="alarm" required> Alarm
+      </div>
+      <div style="margin-top:10px;">
+        <button type="submit">Set</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="clock-container">
+    <div class="clock-digital">
+      <div class="date"></div>
+      <div class="time"></div>
+      <div class="target"></div>
+      <div class="day"></div>
+    </div>
+    <div class="clock-analog">
+      <div class="spear"></div>
+      <div class="hour"></div>
+      <div class="minute"></div>
+      <div class="second"></div>
+      <div class="dail"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+(function() {
+  var months = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"],
+    days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  // Global variables for alarm/timer functionality
+  var mode = null, // "timer" or "alarm"
+      targetTime = null,
+      alarmTriggered = false,
+      snoozeCount = 0,
+      alarmAudio = null,
+      alarmTimeout = null;
+
+  // Function to parse input time string "HH:MM:SS AM/PM" into a Date object.
+  function parseTimeInput(input){
+    var now = new Date();
+    var regex = /(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)/i;
+    var match = input.match(regex);
+    if(!match){
+      alert("Invalid time format. Please use HH:MM:SS AM/PM");
+      return null;
+    }
+    var hr = parseInt(match[1], 10);
+    var min = parseInt(match[2], 10);
+    var sec = parseInt(match[3], 10);
+    var ampm = match[4].toUpperCase();
+    if(ampm === "PM" && hr < 12) { hr += 12; }
+    if(ampm === "AM" && hr === 12) { hr = 0; }
+    
+    var parsed = new Date();
+    parsed.setHours(hr, min, sec, 0);
+    // If the parsed time is earlier than or equal to now, assume it's for the next day.
+    if(parsed <= now){
+      parsed.setDate(parsed.getDate() + 1);
+    }
+    return parsed;
+  }
+
+function triggerAlarm() {
+  if (!alarmAudio) {
+    alarmAudio = new Audio("WAKEBEEP.M4A");
+    alarmAudio.loop = true;
+    alarmAudio.playbackRate = 0.4;
+  }
+  alarmAudio.play();
+
+  if (mode === "timer") {
+    // For timer: play for 1 minute then exit.
+    alarmTimeout = setTimeout(function () {
+      alarmAudio.pause();
+      alarmAudio.src = ""; // Release the audio device
+      alarmAudio = null; // Clear the reference
+      window.close();
+    }, 60000);
+  } else if (mode === "alarm") {
+    // For alarm: play for 1 minute then snooze for 5 minutes (up to 3 snoozes), then exit.
+    alarmTimeout = setTimeout(function () {
+      alarmAudio.pause();
+      alarmAudio.src = ""; // Release the audio device
+      alarmAudio = null; // Clear the reference
+      if (snoozeCount < 3) {
+        snoozeCount++;
+        // Set new target time 5 minutes from now
+        targetTime = new Date(new Date().getTime() + 5 * 60000);
+        alarmTriggered = false;
+      } else {
+        window.close();
+      }
+    }, 60000);
+  }
+}
+
+  // Main function to update clock and digital display.
+  function getTime() {
+    var currentTime = new Date();
+    var second = currentTime.getSeconds(),
+        minute = currentTime.getMinutes(),
+        hour = currentTime.getHours(),
+        time = currentTime.toLocaleString('en-US', { hour: 'numeric', minute:'numeric', second:'numeric', hour12: true }),
+        day = currentTime.getDay(),
+        month = currentTime.getMonth(),
+        dateString = currentTime.getDate() + ' . ' + months[month],
+        ds = second * -6,
+        dm = minute * -6,
+        dh = hour * -30;
+
+    $('.second').css('transform', 'rotate(' + ds + 'deg)');
+    $('.minute').css('transform', 'rotate(' + dm + 'deg)');
+    $('.hour').css('transform', 'rotate(' + dh + 'deg)');
+
+    // Update day and date displays
+    $('.day').text(days[day]);
+    $('.date').text(dateString);
+
+    // If mode (alarm/timer) is set, adjust the digital clock display accordingly.
+    if(mode && targetTime){
+      var now = new Date();
+      if(mode === "timer"){
+        var diff = targetTime - now;
+        if(diff > 0){
+          var secLeft = Math.floor(diff / 1000) % 60;
+          var minLeft = Math.floor(diff / 60000) % 60;
+          var hrLeft = Math.floor(diff / 3600000);
+          var countdown = (hrLeft < 10 ? "0" + hrLeft : hrLeft) + ":" +
+                          (minLeft < 10 ? "0" + minLeft : minLeft) + ":" +
+                          (secLeft < 10 ? "0" + secLeft : secLeft);
+          $('.time').text(countdown);
+          $('.target').text("Ends At: " + targetTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12:true }));
+        } else {
+          if(!alarmTriggered){
+            triggerAlarm();
+            alarmTriggered = true;
+          }
+          $('.time').text("00:00:00");
+          $('.target').text("Ended At: " + targetTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12:true }));
+        }
+      } else if(mode === "alarm"){
+        $('.time').text(time);
+        $('.target').text("Alarm At: " + targetTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12:true }));
+        if(now >= targetTime && !alarmTriggered){
+          triggerAlarm();
+          alarmTriggered = true;
+        }
+      }
+    } else {
+      // If no mode is set yet, show the current time.
+      $('.time').text(time);
+      $('.target').text("");
+    }
+  }
+
+  function dailer(selector, size) {
+    for (var s = 0; s < 60; s++) {
+      $(selector).append('<span style="transform: rotate('+ (6 * s) +'deg) translateX('+ size +'px)">'+s+'</span>');
+    }
+  }
+
+  dailer('.second', 195);
+  dailer('.minute', 145);
+  dailer('.dail', 230);
+
+  for (var s = 1; s < 13; s++) {
+    $('.hour').append('<span style="transform: rotate('+ (30 * s) +'deg) translateX(100px)">'+s+'</span>');
+  }
+
+  // Set interval to update the clock every second.
+  var interval = setInterval(getTime, 1000);
+  getTime(); // Initialize
+
+  // Handle the setup form submission for timer/alarm configuration.
+  $("#setupForm").on("submit", function(e) {
+    e.preventDefault();
+    var timeInput = $("#targetInput").val();
+    var selectedMode = $("input[name='mode']:checked").val();
+    if(!timeInput || !selectedMode){
+      alert("Please enter both time and mode!");
+      return;
+    }
+    var parsedTime = parseTimeInput(timeInput);
+    if(!parsedTime) return;
+    mode = selectedMode;
+    targetTime = parsedTime;
+    // Hide the setup modal once configuration is set.
+    $("#setupModal").hide();
+  });
+
+  // Function to get URL parameters
+  function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  }
+
+  // Read parameters from URL
+  window.onload = function() {
+    var timeInput = getUrlParameter('time');
+    var modeInput = getUrlParameter('mode');
+
+    if (timeInput && modeInput) {
+        // Set values first
+        document.getElementById("targetInput").value = decodeURIComponent(timeInput);
+        document.querySelector("input[name='mode'][value='" + modeInput + "']").checked = true;
+        
+        // Create and submit form
+        var form = document.getElementById('setupForm');
+        var submitEvent = new Event('submit', {
+            bubbles: true,
+            cancelable: true
+        });
+        form.dispatchEvent(submitEvent);
+        
+        // Immediately hide the modal
+        document.getElementById('setupModal').style.display = 'none';
+    }
+  };
+
+})();
+  </script>
+</body>
+</html>
